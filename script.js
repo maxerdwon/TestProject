@@ -118,11 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.promptResult.value = ""; 
 
             try {
-                const response = await fetch('http://localhost:5000/api/generate-prompt', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                // المثال الصحيح
+                const response = await fetch('/api/generate-prompt', {
+                 method: 'POST',
+                 headers: {
+                'Content-Type': 'application/json',
+                },
+                });
                     body: JSON.stringify({
                         image_base64: state.loadedImageBase64,
                         model: state.currentModel
