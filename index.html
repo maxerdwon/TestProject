@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image to Prompt Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-banner">
+        Have many images to convert? Try our <a href="#">Batch Image to Prompt</a> tool for better efficiency.
+    </div>
+    <div class="main-container">
+        <div class="upload-preview">
+            <section class="card-section">
+                <h3><i class="fas fa-upload"></i> Upload Image</h3>
+                <div class="drop-area" id="dropArea">
+                    <i class="fas fa-image big-icon"></i>
+                    <p>Drag & drop an image here</p>
+                    <p class="small-text">PNG, JPG, WEBP - (Max 4MB)</p>
+                    <input type="file" id="imageUploadInput" accept=".png, .jpg, .jpeg, .webp" style="display:none;">
+                    <button id="chooseFileButton" class="btn-secondary">Choose File</button>
+                </div>
+            </section>
+            <section class="card-section">
+                <h3><i class="fas fa-eye"></i> Image Preview</h3>
+                <div class="preview-box">
+                    <img id="imagePreview" src="#" alt="Image Preview" style="display:none;" />
+                    <div id="imagePreviewPlaceholder">No image selected yet</div>
+                </div>
+            </section>
+        </div>
+        <section class="ai-model-section">
+            <h2><i class="fas fa-cogs"></i> Select AI Model</h2>
+            <div class="model-cards">
+                <div class="model-card selected" data-model="general">
+                    <i class="fas fa-image"></i>
+                    <h4>General Prompt</h4>
+                    <p>Natural language description of the image.</p>
+                </div>
+                <div class="model-card" data-model="flux">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Flux</h4>
+                    <p>Optimized for Flux models, concise and precise.</p>
+                </div>
+                <div class="model-card" data-model="midjourney">
+                    <i class="fas fa-palette"></i>
+                    <h4>Midjourney</h4>
+                    <p>Designed for Midjourney, focuses on artistic style.</p>
+                </div>
+                <div class="model-card" data-model="stable-diffusion">
+                    <i class="fas fa-atom"></i>
+                    <h4>Stable Diffusion</h4>
+                    <p>Formatted for Stable Diffusion, technical details.</p>
+                </div>
+            </div>
+        </section>
+        <div class="generate-area">
+            <div class="language-selector">
+                <label for="promptLanguage">Prompt Language:</label>
+                <select id="promptLanguage" name="language">
+                    <option value="en" selected>English</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+            <div class="generate-action-row">
+                 <button id="generatePromptButton">
+                    <i class="fas fa-magic button-icon"></i>
+                    <span class="spinner"></span>
+                    <span class="button-text">Generate Prompt</span>
+                </button>
+                <div id="usageCounter" class="usage-counter"></div>
+            </div>
+        </div>
+        <div class="prompt-output-section">
+            <div class="output-actions">
+                <button id="copyPromptButton" style="display:none;">
+                    <i class="fas fa-copy icon-default"></i>
+                    <i class="fas fa-check icon-success" style="display:none;"></i>
+                    <span class="button-text">Copy Prompt</span>
+                </button>
+                <button id="editPromptButton" style="display:none;">
+                    <i class="fas fa-edit"></i>
+                    <span class="button-text">Edit Prompt</span>
+                </button>
+            </div>
+            <textarea id="promptResult" readonly placeholder="The generated prompt will appear here..."></textarea>
+        </div>
+        <section class="faq-section">
+            <h2>Which AI Model Should I Choose?</h2>
+            <p class="faq-subtitle">Each model style is optimized for a different type of AI image generator. Here’s a guide to help you choose.</p>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <i class="fas fa-image"></i>
+                        <h3>General Prompt</h3>
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>
+                            <strong>Best for:</strong> DALL-E 3 (via ChatGPT), Google Gemini, and other models that understand natural language.<br>
+                            <strong>Prompt Format:</strong> A complete, descriptive paragraph that tells a story.<br><br>
+                            Choose this when you want to create a complex scene with specific interactions, or when you prefer to describe your idea in plain language without learning technical keywords. It excels at capturing a specific narrative.
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <i class="fas fa-palette"></i>
+                        <h3>Midjourney</h3>
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>
+                            <strong>Best for:</strong> Midjourney (especially v6).<br>
+                            <strong>Prompt Format:</strong> A comma-separated series of keywords and short descriptive phrases, ending with technical parameters like `--ar` and `--v`.<br><br>
+                            Choose this when you want highly artistic, stylized, or cinematic-quality images. It gives you precise control over the art direction, lighting, and composition. This is the choice for professional, art-directed results.
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <i class="fas fa-atom"></i>
+                        <h3>Stable Diffusion</h3>
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>
+                            <strong>Best for:</strong> Stable Diffusion models, especially SDXL.<br>
+                            <strong>Prompt Format:</strong> A mix of descriptive phrases and comma-separated keywords, often including "quality tags" (e.g., masterpiece, best quality) at the end.<br><br>
+                            Choose this when you want extreme photorealism or very specific styles (like anime or fantasy). It's highly versatile and powerful, offering a different kind of granular control.
+                        </p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Flux</h3>
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>
+                            <strong>Best for:</strong> The new Flux model.<br>
+                            <strong>Prompt Format:</strong> Shorter, more direct keywords and phrases.<br><br>
+                            Choose this when you need high-quality results very quickly. Flux understands complex ideas with simpler prompts, making it excellent for rapid experimentation and iteration.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>Made with ❤️ by <a href="https://www.activetoolz.com/" target="_blank" rel="noopener noreferrer">Active Toolz</a></p>
+    </footer>
+   <script src="script.js?v=2"></script>
+</body>
+</html>
